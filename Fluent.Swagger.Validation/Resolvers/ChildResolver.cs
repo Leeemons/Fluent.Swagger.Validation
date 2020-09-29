@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,18 +34,20 @@ namespace Fluent.Swagger.Validation.Resolvers
         {
             var propertyValidationContext = new PropertyValidatorContext(new ValidationContext<object>(new { }), null, string.Empty, null);
 
-            var childValidatorAdapter = (IChildValidatorAdaptor)propertyValidator;
+            var childValidatorAdaptor = (IChildValidatorAdaptor)propertyValidator;
 
-            var childValidator = (IValidator)childValidatorAdapter
+            var childValidator = (IValidator)childValidatorAdaptor
                 .GetType()
                 .GetMethod(nameof(ChildValidatorAdaptor<object, object>.GetValidator))
-                .Invoke(childValidatorAdapter, new[] { propertyValidationContext });
+                .Invoke(childValidatorAdaptor, new[] { propertyValidationContext });
 
             if (childValidator is not IEnumerable<IValidationRule> validators)
             {
                 logger.LogDebug($"Skipped '{childValidator}'");
                 return Task.CompletedTask;
             }
+
+            var innerSchema = GetApiSchemeForProperty(context, propertyRule);
 
             foreach (var rule in validators)
             {
@@ -57,15 +60,45 @@ namespace Fluent.Swagger.Validation.Resolvers
                 {
                     foreach (var resolver in resolvers.Where(r => r.MatchFunc(innerPropertyValidator)))
                     {
-                        var innerSchema = context.SchemaRepository.Schemas[propertyRule.PropertyName].DeepCopy();
                         resolver.Resolve(innerSchema, context, innerPropertyRule, innerPropertyValidator, validatorFactory, resolvers);
-                        schema.Properties[propertyRule.PropertyName.ToLower()] = innerSchema;
                     }
                 }
             }
-            
 
+            schema.Properties[propertyRule.GetPropertyKey()] = innerSchema;
             return Task.CompletedTask;
+        }
+
+        private OpenApiSchema GetApiSchemeForProperty(SchemaFilterContext context, PropertyRule propertyRule)
+        {
+            var innerSchema = context.SchemaRepository.Schemas[propertyRule.PropertyName];
+            OpenApiSchema newInnerScheme = GetNewInnerScheme(innerSchema);
+
+            foreach (var property in innerSchema.Properties)
+            {
+                if (!newInnerScheme.Properties.ContainsKey(property.Key))
+                {
+                    newInnerScheme.Properties[property.Key] = GetNewInnerScheme(innerSchema.Properties[property.Key]);
+                }
+
+            }
+
+            return newInnerScheme;
+        }
+
+        private static OpenApiSchema GetNewInnerScheme(OpenApiSchema innerSchema)
+        {
+            return new OpenApiSchema()
+            {
+                Format = innerSchema.Format,
+                Title = innerSchema.Title,
+                Description = innerSchema.Description,
+                Type = innerSchema.Type,
+                Nullable = innerSchema.Nullable,
+                AdditionalPropertiesAllowed = innerSchema.AdditionalPropertiesAllowed,
+                Deprecated = innerSchema.Deprecated,
+                ReadOnly = innerSchema.ReadOnly
+            };
         }
     }
 }

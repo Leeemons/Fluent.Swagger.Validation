@@ -64,19 +64,6 @@ namespace Fluent.Swagger.Validation
                         resolver.Resolve(schema, context, propertyRule, propertyValidator, validatorFactory, resolvers);
                     }
 
-                    //if (propertyValidator is IChildValidatorAdaptor childValidatorAdapter)
-                    //{
-                    //    var propertyValidationContext = new PropertyValidatorContext(new ValidationContext<object>(new { }), null, string.Empty, null);
-
-                    //    var childValidator = (IValidator)childValidatorAdapter
-                    //        .GetType()
-                    //        .GetMethod(nameof(ChildValidatorAdaptor<object, object>.GetValidator))
-                    //        .Invoke(childValidatorAdapter, new[] { propertyValidationContext });
-
-                    //}
-
-                    
-
                 }
             }
         }

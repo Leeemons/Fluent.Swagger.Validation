@@ -17,11 +17,20 @@ namespace Fluent.Swagger.Validation.Api
         public string Telephone { get; set; }
 
         public Address Address { get; set; }
+        
     }
 
     public class Address
     {
         public string Street { get; set; }
         public string? HouseNumber { get; set; }
+
+        public InnerAddress InnerAddress { get; set; }
+    }
+
+    public class InnerAddress
+    {
+        public string HS { get; set; }
+        public string? TS { get; set; }
     }
 }

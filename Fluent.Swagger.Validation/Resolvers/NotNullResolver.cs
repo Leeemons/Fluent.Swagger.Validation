@@ -22,11 +22,13 @@ namespace Fluent.Swagger.Validation.Resolvers
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers)
         {
-            if (schema.Required == null) schema.Required = new SortedSet<string>();
-            if (!schema.Required.Contains(propertyRule.PropertyName.ToLower()))
+            if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
+
+            if (schema.Required == null) schema.Required = new SortedSet<string>();            
+            if (!schema.Required.Contains(propertyRule.GetPropertyKey()))
             {
-                schema.Required.Add(propertyRule.PropertyName.ToLower());
-                schema.Properties[propertyRule.PropertyName.ToLower()].Nullable = false;
+                schema.Required.Add(propertyRule.GetPropertyKey());
+                schema.Properties[propertyRule.GetPropertyKey()].Nullable = false;
             }
 
             return Task.CompletedTask;

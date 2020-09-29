@@ -18,6 +18,11 @@ namespace Fluent.Swagger.Validation.Api
             RuleFor(r => r.Address).NotNull().ChildRules(c =>
             {
                 c.RuleFor(a => a.Street).NotNull();
+                c.RuleFor(a => a.InnerAddress).ChildRules(r =>
+                {
+                    r.RuleFor(a => a.HS).NotNull();
+                    r.RuleFor(a => a.TS).NotNull().When(_ => 5 < 0);
+                });
             });            
         }
     }
