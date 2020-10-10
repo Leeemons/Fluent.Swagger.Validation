@@ -15,16 +15,18 @@ pool:
 variables:
   buildConfiguration: 'Release'
 steps:
-- task: CmdLine@2
+- task: DotNetCoreCLI@2
   inputs:
-    script: 'ls'
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
     workingDirectory: 'src/Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Build'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration Release'
+    arguments: '--configuration Release --no-restore'
     workingDirectory: 'src/Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Pack'
