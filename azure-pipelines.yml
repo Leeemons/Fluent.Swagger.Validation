@@ -16,7 +16,7 @@ steps:
   name: 'Build'
   inputs:
     command: 'build'
-    projects: '*\Fluent.Swagger.Validation.Api.csproj'
+    projects: 'src\Fluent.Swagger.Validation\Fluent.Swagger.Validation.Api.csproj'
 - task: DotNetCoreCLI@2
   name: 'Pack'
   inputs:
