@@ -24,7 +24,7 @@ steps:
     script: |
       echo Write your commands here
       
-      echo VERSION_TAG
+      echo $VERSION_TAG
 - task: DotNetCoreCLI@2
   name: 'Restore'
   inputs:
