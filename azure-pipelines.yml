@@ -18,21 +18,19 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: 'src/Fluent.Swagger.Validation/*.csproj'
     feedsToUse: 'select'
-    workingDirectory: 'src/Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Build'
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: 'src/Fluent.Swagger.Validation/*.csproj'
     arguments: '--configuration Release --no-restore'
-    workingDirectory: 'src/Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Pack'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: 'src/Fluent.Swagger.Validation/*.csproj'
     versioningScheme: 'off'
 - task: PublishBuildArtifacts@1
   name: 'PublishArtifact'
