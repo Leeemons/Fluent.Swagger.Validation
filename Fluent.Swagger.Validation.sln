@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30516.212
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Swagger.Validation.Api", "src\Fluent.Swagger.Validation.Api\Fluent.Swagger.Validation.Api.csproj", "{B8D4DC90-1044-4DE6-8DC5-EF8B90D93843}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Swagger.Validation", "Fluent.Swagger.Validation\Fluent.Swagger.Validation.csproj", "{347647D5-0576-4AE9-AAA7-20C7D97A32AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Swagger.Validation", "src\Fluent.Swagger.Validation\Fluent.Swagger.Validation.csproj", "{347647D5-0576-4AE9-AAA7-20C7D97A32AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
