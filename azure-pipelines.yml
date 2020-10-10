@@ -13,13 +13,16 @@ variables:
   buildConfiguration: 'Release'
 steps:
 - task: DotNetCoreCLI@2
+  name: 'Build'
   inputs:
     command: 'build'
-    projects: 'src\Fluent.Swagger.Validation.Api\Fluent.Swagger.Validation.Api.csproj'
+    projects: '*\Fluent.Swagger.Validation.Api.csproj'
 - task: DotNetCoreCLI@2
+  name: 'Pack'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     versioningScheme: 'off'
 - task: PublishBuildArtifacts@1
+  name: 'PublishArtifact'
   displayName: 'Publish Artifact: drop'
