@@ -15,11 +15,15 @@ pool:
 variables:
   buildConfiguration: 'Release'
 steps:
+- task: CmdLine@2
+  inputs:
+    script: 'ls'
 - task: DotNetCoreCLI@2
   name: 'Build'
   inputs:
     command: 'build'
-    projects: 'src\Fluent.Swagger.Validation\Fluent.Swagger.Validation.csproj'
+    projects: 'Fluent.Swagger.Validation.csproj'
+    workingDirectory: 'src\Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Pack'
   inputs:
