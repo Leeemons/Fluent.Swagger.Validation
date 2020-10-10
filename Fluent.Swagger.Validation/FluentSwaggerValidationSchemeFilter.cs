@@ -1,15 +1,11 @@
 ﻿using Fluent.Swagger.Validation.Resolvers;
 using FluentValidation;
 using FluentValidation.Internal;
-using FluentValidation.Validators;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Validations;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Fluent.Swagger.Validation
 {

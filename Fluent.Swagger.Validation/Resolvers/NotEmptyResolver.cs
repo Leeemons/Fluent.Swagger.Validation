@@ -5,11 +5,10 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Fluent.Swagger.Validation.Resolvers
-{    
+{
     public class NotEmptyResolver : IResolver
     {
         public Func<IPropertyValidator, bool> MatchFunc => v => v is LessThanOrEqualValidator;

@@ -1,9 +1,5 @@
 ﻿using Fluent.Swagger.Validation.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Fluent.Swagger.Validation
 {
