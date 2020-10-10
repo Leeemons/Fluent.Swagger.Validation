@@ -27,8 +27,8 @@ namespace Fluent.Swagger.Validation.Api
 
             services.AddSwaggerGen(o =>
             {
-                o.SchemaFilter<FluentSwaggerValidationSchemeFilter>();
-                o.OperationFilter<FluentSwaggerValidationOperationFilter>();
+                o.AddFluentSwaggerFilters();
+
             }).AddFluentSwaggerValidation();
         }
 

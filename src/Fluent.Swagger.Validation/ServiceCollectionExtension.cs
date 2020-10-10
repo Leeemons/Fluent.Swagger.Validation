@@ -1,5 +1,6 @@
 ﻿using Fluent.Swagger.Validation.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Linq;
 using System.Reflection;
