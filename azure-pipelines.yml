@@ -4,7 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+  tags:    
+    include:
+      - v*
+  
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -16,7 +19,7 @@ steps:
   name: 'Build'
   inputs:
     command: 'build'
-    projects: 'src\Fluent.Swagger.Validation\Fluent.Swagger.Validation.Api.csproj'
+    projects: 'src\Fluent.Swagger.Validation\Fluent.Swagger.Validation.csproj'
 - task: DotNetCoreCLI@2
   name: 'Pack'
   inputs:
