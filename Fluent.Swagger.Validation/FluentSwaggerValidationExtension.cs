@@ -54,5 +54,10 @@ namespace Fluent.Swagger.Validation
 
             return true;
         }
+
+        public static decimal ToDecimal(this object @object)
+        {            
+            return Convert.ToDecimal(@object);
+        }
     }
 }
