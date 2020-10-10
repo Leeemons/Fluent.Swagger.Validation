@@ -18,13 +18,13 @@ steps:
 - task: CmdLine@2
   inputs:
     script: 'ls'
-    workingDirectory: 'src\Fluent.Swagger.Validation'
+    workingDirectory: 'src/Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Build'
   inputs:
     command: 'build'
     projects: 'Fluent.Swagger.Validation.csproj'
-    workingDirectory: 'src\Fluent.Swagger.Validation'
+    workingDirectory: 'src/Fluent.Swagger.Validation'
 - task: DotNetCoreCLI@2
   name: 'Pack'
   inputs:
