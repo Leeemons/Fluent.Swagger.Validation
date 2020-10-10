@@ -36,7 +36,7 @@ steps:
     command: 'pack'
     packagesToPack: 'src/Fluent.Swagger.Validation/*.csproj'
     versioningScheme: 'off'
-    arguments: 'p:PackageVersion={{ $VERSION_TAG}}.0'
+    arguments: 'p:PackageVersion={{ $VERSION_TAG }}.0'
 
 - task: PublishBuildArtifacts@1
   name: 'PublishArtifact'
