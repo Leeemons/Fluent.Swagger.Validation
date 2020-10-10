@@ -11,8 +11,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Fluent.Swagger.Validation\Fluent.Swagger.Validation.csproj" />
+  <ItemGroup>    
+    <ProjectReference Include="..\Fluent.Swagger.Validation\Fluent.Swagger.Validation.csproj" />
   </ItemGroup>
 
 
