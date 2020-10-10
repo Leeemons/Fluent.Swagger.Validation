@@ -13,10 +13,15 @@ namespace Fluent.Swagger.Validation.Resolvers
     {
         public Func<IPropertyValidator, bool> MatchFunc => v => v is LessThanOrEqualValidator;
 
-        public Task Resolve(OpenApiSchema schema, SchemaFilterContext context, PropertyRule propertyRule, IPropertyValidator propertyValidator, IValidatorFactory validatorFactory, IEnumerable<IResolver> resolvers)
+        public Task Resolve(OpenApiSchema schema,
+            SchemaFilterContext context,
+            PropertyRule propertyRule,
+            IPropertyValidator propertyValidator,
+            IValidatorFactory validatorFactory,
+            IEnumerable<IResolver> resolvers)
         {
             if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
-            
+
             var schemaProperty = schema.Properties[propertyRule.GetPropertyKey()];
             schemaProperty.MinLength = 1;
             schemaProperty.Nullable = false;

@@ -13,7 +13,13 @@ namespace Fluent.Swagger.Validation.Resolvers
     {
         public Func<IPropertyValidator, bool> MatchFunc => v => v is AspNetCoreCompatibleEmailValidator || v is EmailValidator;
 
-        public Task Resolve(OpenApiSchema schema, SchemaFilterContext context, PropertyRule propertyRule, IPropertyValidator propertyValidator, IValidatorFactory validatorFactory, IEnumerable<IResolver> resolvers)
+        public Task Resolve(
+            OpenApiSchema schema,
+            SchemaFilterContext context,
+            PropertyRule propertyRule,
+            IPropertyValidator propertyValidator,
+            IValidatorFactory validatorFactory,
+            IEnumerable<IResolver> resolvers)
         {
             var schemaProperty = schema.Properties[propertyRule.GetPropertyKey()];
             schemaProperty.Format = "email";

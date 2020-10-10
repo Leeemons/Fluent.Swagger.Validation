@@ -13,7 +13,13 @@ namespace Fluent.Swagger.Validation.Resolvers
     {
         public Func<IPropertyValidator, bool> MatchFunc => v => v is IComparisonValidator;
 
-        public Task Resolve(OpenApiSchema schema, SchemaFilterContext context, PropertyRule propertyRule, IPropertyValidator propertyValidator, IValidatorFactory validatorFactory, IEnumerable<IResolver> resolvers)
+        public Task Resolve(
+            OpenApiSchema schema,
+            SchemaFilterContext context,
+            PropertyRule propertyRule,
+            IPropertyValidator propertyValidator,
+            IValidatorFactory validatorFactory,
+            IEnumerable<IResolver> resolvers)
         {
             if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
 
