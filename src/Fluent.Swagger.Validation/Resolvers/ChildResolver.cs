@@ -44,8 +44,8 @@ namespace Fluent.Swagger.Validation.Resolvers
                 logger.LogDebug($"Skipped '{childValidator}'");
                 return Task.CompletedTask;
             }
-
-            var innerSchema = GetApiSchemeForProperty(context, propertyRule);
+            
+            var innerSchema = propertyRule is IIncludeRule ? schema : GetApiSchemeForProperty(context, propertyRule);
 
             foreach (var rule in validators)
             {
@@ -63,7 +63,11 @@ namespace Fluent.Swagger.Validation.Resolvers
                 }
             }
 
-            schema.Properties[propertyRule.GetPropertyKey()] = innerSchema;
+            if (propertyRule is not IIncludeRule)
+            {
+                schema.Properties[propertyRule.GetPropertyKey()] = innerSchema;
+            }
+
             return Task.CompletedTask;
         }
 

@@ -11,7 +11,7 @@ namespace Fluent.Swagger.Validation.Resolvers
 {
     public class NotEmptyResolver : IResolver
     {
-        public Func<IPropertyValidator, bool> MatchFunc => v => v is LessThanOrEqualValidator;
+        public Func<IPropertyValidator, bool> MatchFunc => v => v is NotEmptyValidator;
 
         public Task Resolve(OpenApiSchema schema,
             SchemaFilterContext context,
