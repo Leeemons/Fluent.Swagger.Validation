@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 
 namespace Fluent.Swagger.Validation.Api
 {
     public class WeatherForecastValidator : AbstractValidator<WeatherForecast>
     {
-        public WeatherForecastValidator()
+        public WeatherForecastValidator(IHttpContextAccessor httpContextAccessor)
         {
             RuleFor(r => r.Date).NotNull();
             RuleFor(r => r.Summary).NotEmpty();
