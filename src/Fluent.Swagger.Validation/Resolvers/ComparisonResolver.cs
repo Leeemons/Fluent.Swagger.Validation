@@ -38,7 +38,7 @@ namespace Fluent.Swagger.Validation.Resolvers
                     schemaProperty.ExclusiveMaximum = true;
                     break;
                 case Comparison.GreaterThanOrEqual:
-                    schemaProperty.Maximum = comparisonValidator.ValueToCompare.ToDecimal();
+                    schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
                     break;
                 case Comparison.LessThan:
                     schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
