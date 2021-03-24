@@ -44,7 +44,7 @@ namespace Fluent.Swagger.Validation.Resolvers
                 logger.LogDebug($"Skipped '{childValidator}'");
                 return Task.CompletedTask;
             }
-            
+
             var innerSchema = propertyRule is IIncludeRule ? schema : GetApiSchemeForProperty(context, propertyRule);
 
             foreach (var rule in validators)
@@ -73,7 +73,7 @@ namespace Fluent.Swagger.Validation.Resolvers
 
         private OpenApiSchema GetApiSchemeForProperty(SchemaFilterContext context, PropertyRule propertyRule)
         {
-            var innerSchema = context.SchemaRepository.Schemas[propertyRule.PropertyName];
+            var innerSchema = context.SchemaRepository.Schemas[propertyRule.TypeToValidate.Name];
             OpenApiSchema newInnerScheme = GetNewInnerScheme(innerSchema);
 
             foreach (var property in innerSchema.Properties)
@@ -82,7 +82,6 @@ namespace Fluent.Swagger.Validation.Resolvers
                 {
                     newInnerScheme.Properties[property.Key] = GetNewInnerScheme(innerSchema.Properties[property.Key]);
                 }
-
             }
 
             return newInnerScheme;
