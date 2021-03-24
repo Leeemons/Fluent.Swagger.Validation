@@ -89,17 +89,7 @@ namespace Fluent.Swagger.Validation.Resolvers
 
         private static OpenApiSchema GetNewInnerScheme(OpenApiSchema innerSchema)
         {
-            return new OpenApiSchema()
-            {
-                Format = innerSchema.Format,
-                Title = innerSchema.Title,
-                Description = innerSchema.Description,
-                Type = innerSchema.Type,
-                Nullable = innerSchema.Nullable,
-                AdditionalPropertiesAllowed = innerSchema.AdditionalPropertiesAllowed,
-                Deprecated = innerSchema.Deprecated,
-                ReadOnly = innerSchema.ReadOnly
-            };
+            return innerSchema.DeepCopy();
         }
     }
 }
