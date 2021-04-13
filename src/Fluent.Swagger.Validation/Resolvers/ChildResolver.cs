@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Fluent.Swagger.Validation.Resolvers
@@ -20,24 +21,20 @@ namespace Fluent.Swagger.Validation.Resolvers
             this.logger = logger;
         }
 
-        public Func<IPropertyValidator, bool> MatchFunc => v => v is IChildValidatorAdaptor;
+        public Func<IRuleComponent, bool> MatchFunc => v => v.Validator is IChildValidatorAdaptor;
 
         public Task Resolve(
             OpenApiSchema schema,
             SchemaFilterContext context,
-            PropertyRule propertyRule,
-            IPropertyValidator propertyValidator,
+            IValidationRule validationRule,
+            IRuleComponent ruleComponent,
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers)
         {
-            var propertyValidationContext = new PropertyValidatorContext(new ValidationContext<object>(new { }), null, string.Empty, null);
-
-            var childValidatorAdaptor = (IChildValidatorAdaptor)propertyValidator;
-
-            var childValidator = (IValidator)childValidatorAdaptor
+            var childValidator = ruleComponent.Validator
                 .GetType()
-                .GetMethod(nameof(ChildValidatorAdaptor<object, object>.GetValidator))
-                .Invoke(childValidatorAdaptor, new[] { propertyValidationContext });
+                .GetField("_validator", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(ruleComponent.Validator);
 
             if (childValidator is not IEnumerable<IValidationRule> validators)
             {
@@ -45,35 +42,35 @@ namespace Fluent.Swagger.Validation.Resolvers
                 return Task.CompletedTask;
             }
 
-            var innerSchema = propertyRule is IIncludeRule ? schema : GetApiSchemeForProperty(context, propertyRule);
+            var innerSchema = validationRule is IIncludeRule ? schema : GetApiSchemeForProperty(context, validationRule);
 
             foreach (var rule in validators)
             {
-                if (rule is not PropertyRule innerPropertyRule)
+                if (rule is not IValidationRule innerPropertyRule)
                 {
                     logger.LogDebug($"Skipped '{rule}'");
                     continue;
                 }
-                foreach (var innerPropertyValidator in rule.Validators)
+                foreach (var innerRuleComponent in rule.Components)
                 {
-                    foreach (var resolver in resolvers.Where(r => r.MatchFunc(innerPropertyValidator)))
+                    foreach (var resolver in resolvers.Where(r => r.MatchFunc(innerRuleComponent)))
                     {
-                        resolver.Resolve(innerSchema, context, innerPropertyRule, innerPropertyValidator, validatorFactory, resolvers);
+                        resolver.Resolve(innerSchema, context, innerPropertyRule, innerRuleComponent, validatorFactory, resolvers);
                     }
                 }
             }
 
-            if (propertyRule is not IIncludeRule)
+            if (validationRule is not IIncludeRule)
             {
-                schema.Properties[propertyRule.GetPropertyKey()] = innerSchema;
+                schema.Properties[validationRule.GetPropertyKey()] = innerSchema;
             }
 
             return Task.CompletedTask;
         }
 
-        private OpenApiSchema GetApiSchemeForProperty(SchemaFilterContext context, PropertyRule propertyRule)
+        private OpenApiSchema GetApiSchemeForProperty(SchemaFilterContext context, IValidationRule validationRule)
         {
-            var innerSchema = context.SchemaRepository.Schemas[propertyRule.TypeToValidate.Name];
+            var innerSchema = context.SchemaRepository.Schemas[validationRule.TypeToValidate.Name];
             OpenApiSchema newInnerScheme = GetNewInnerScheme(innerSchema);
 
             foreach (var property in innerSchema.Properties)

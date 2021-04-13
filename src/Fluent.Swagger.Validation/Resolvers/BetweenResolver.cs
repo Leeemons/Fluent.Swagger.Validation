@@ -11,33 +11,32 @@ namespace Fluent.Swagger.Validation.Resolvers
 {
     public class BetweenResolver : IResolver
     {
-        public Func<IPropertyValidator, bool> MatchFunc => v => v is IBetweenValidator;
+        public Func<IRuleComponent, bool> MatchFunc => v => v.Validator is IBetweenValidator;
 
         public Task Resolve(
             OpenApiSchema schema,
             SchemaFilterContext context,
-            PropertyRule propertyRule,
-            IPropertyValidator propertyValidator,
+            IValidationRule validationRule,
+            IRuleComponent ruleComponent,
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers)
         {
-            if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
+            if (validationRule.HasConditions() || ruleComponent.HasConditions()) return Task.CompletedTask;
 
-            var schemaProperty = schema.Properties[propertyRule.GetPropertyKey()];
+            var schemaProperty = schema.Properties[validationRule.GetPropertyKey()];
 
-            var betweenValidator = (IBetweenValidator)propertyValidator;
+            var betweenValidator = (IBetweenValidator)ruleComponent.Validator;
 
             if (betweenValidator.From.GetType().IsValueType && betweenValidator.To.GetType().IsValueType)
             {
                 schemaProperty.Maximum = betweenValidator.To.ToDecimal();
                 schemaProperty.Minimum = betweenValidator.From.ToDecimal();
-                if (betweenValidator is ExclusiveBetweenValidator)
+                if (betweenValidator.Name == "ExclusiveBetweenValidator")
                 {
                     schemaProperty.ExclusiveMaximum = true;
                     schemaProperty.ExclusiveMinimum = true;
                 }
             }
-
 
             return Task.CompletedTask;
         }

@@ -11,21 +11,21 @@ namespace Fluent.Swagger.Validation.Resolvers
 {
     public class ComparisonResolver : IResolver
     {
-        public Func<IPropertyValidator, bool> MatchFunc => v => v is IComparisonValidator;
+        public Func<IRuleComponent, bool> MatchFunc => v => v.Validator is IComparisonValidator;
 
         public Task Resolve(
             OpenApiSchema schema,
             SchemaFilterContext context,
-            PropertyRule propertyRule,
-            IPropertyValidator propertyValidator,
+            IValidationRule validationRule,
+            IRuleComponent ruleComponent,
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers)
         {
-            if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
+            if (validationRule.HasConditions() || ruleComponent.HasConditions()) return Task.CompletedTask;
 
-            var schemaProperty = schema.Properties[propertyRule.GetPropertyKey()];
+            var schemaProperty = schema.Properties[validationRule.GetPropertyKey()];
 
-            var comparisonValidator = (IComparisonValidator)propertyValidator;
+            var comparisonValidator = (IComparisonValidator)ruleComponent.Validator;
 
             switch (comparisonValidator.Comparison)
             {
@@ -33,22 +33,25 @@ namespace Fluent.Swagger.Validation.Resolvers
                     schemaProperty.Maximum = comparisonValidator.ValueToCompare.ToDecimal();
                     schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
                     break;
+
                 case Comparison.GreaterThan:
                     schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
                     schemaProperty.ExclusiveMaximum = true;
                     break;
+
                 case Comparison.GreaterThanOrEqual:
                     schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
                     break;
+
                 case Comparison.LessThan:
                     schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
                     schemaProperty.ExclusiveMinimum = true;
                     break;
+
                 case Comparison.LessThanOrEqual:
                     schemaProperty.Minimum = comparisonValidator.ValueToCompare.ToDecimal();
                     break;
             }
-
 
             return Task.CompletedTask;
         }

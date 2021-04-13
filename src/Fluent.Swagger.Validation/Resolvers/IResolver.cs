@@ -11,13 +11,13 @@ namespace Fluent.Swagger.Validation.Resolvers
 {
     public interface IResolver
     {
-        Func<IPropertyValidator, bool> MatchFunc { get; }
+        Func<IRuleComponent, bool> MatchFunc { get; }
 
         Task Resolve(
-            OpenApiSchema schema, 
-            SchemaFilterContext context, 
-            PropertyRule propertyRule, 
-            IPropertyValidator propertyValidator, 
+            OpenApiSchema schema,
+            SchemaFilterContext context,
+            IValidationRule validationRule,
+            IRuleComponent ruleComponent,
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers);
     }

@@ -1,4 +1,5 @@
-﻿using FluentValidation.Internal;
+﻿using FluentValidation;
+using FluentValidation.Internal;
 using FluentValidation.Validators;
 using System;
 using System.Text.Json;
@@ -19,23 +20,23 @@ namespace Fluent.Swagger.Validation
             var isAllUpper = text.IsAllUpper();
 
             return !string.IsNullOrWhiteSpace(text) && text.Length >= 1 && !isAllUpper
-                ? char.ToLowerInvariant(text[0]) + text.Substring(1) 
+                ? char.ToLowerInvariant(text[0]) + text[1..]
                 : isAllUpper ? text.ToLowerInvariant() : text;
         }
 
-        public static string GetPropertyKey(this PropertyRule propertyRule)
+        public static string GetPropertyKey(this IValidationRule propertyRule)
         {
             return propertyRule.PropertyName.ToCamelCase();
         }
 
-        public static bool HasConditions(this PropertyRule propertyRule)
+        public static bool HasConditions(this IValidationRule propertyRule)
         {
-            return propertyRule.Condition != null || propertyRule.AsyncCondition != null;
+            return propertyRule.HasCondition || propertyRule.HasAsyncCondition;
         }
 
-        public static bool HasConditions(this IPropertyValidator propertyValidator)
+        public static bool HasConditions(this IRuleComponent ruleComponent)
         {
-            return propertyValidator.Options?.Condition != null || propertyValidator.Options?.AsyncCondition != null;
+            return ruleComponent.HasCondition || ruleComponent.HasAsyncCondition;
         }
 
         public static bool IsAllUpper(this string text)
@@ -49,7 +50,7 @@ namespace Fluent.Swagger.Validation
         }
 
         public static decimal ToDecimal(this object @object)
-        {            
+        {
             return Convert.ToDecimal(@object);
         }
     }

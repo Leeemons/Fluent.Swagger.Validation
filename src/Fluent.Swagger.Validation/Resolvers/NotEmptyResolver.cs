@@ -11,22 +11,21 @@ namespace Fluent.Swagger.Validation.Resolvers
 {
     public class NotEmptyResolver : IResolver
     {
-        public Func<IPropertyValidator, bool> MatchFunc => v => v is NotEmptyValidator;
+        public Func<IRuleComponent, bool> MatchFunc => v => v.Validator is INotEmptyValidator;
 
         public Task Resolve(OpenApiSchema schema,
             SchemaFilterContext context,
-            PropertyRule propertyRule,
-            IPropertyValidator propertyValidator,
+            IValidationRule validationRule,
+            IRuleComponent ruleComponent,
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers)
         {
-            if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
+            if (validationRule.HasConditions() || ruleComponent.HasConditions()) return Task.CompletedTask;
 
-            var schemaProperty = schema.Properties[propertyRule.GetPropertyKey()];
+            var schemaProperty = schema.Properties[validationRule.GetPropertyKey()];
             schemaProperty.MinLength = 1;
             schemaProperty.Nullable = false;
             return Task.CompletedTask;
-
         }
     }
 }

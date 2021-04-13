@@ -11,23 +11,23 @@ namespace Fluent.Swagger.Validation.Resolvers
 {
     public class NotNullResolver : IResolver
     {
-        public Func<IPropertyValidator, bool> MatchFunc => v => v is NotNullValidator;
+        public Func<IRuleComponent, bool> MatchFunc => v => v.Validator is INotNullValidator;
 
         public Task Resolve(
             OpenApiSchema schema,
             SchemaFilterContext context,
-            PropertyRule propertyRule,
-            IPropertyValidator propertyValidator,
+            IValidationRule validationRule,
+            IRuleComponent ruleComponent,
             IValidatorFactory validatorFactory,
             IEnumerable<IResolver> resolvers)
         {
-            if (propertyRule.HasConditions() || propertyValidator.HasConditions()) return Task.CompletedTask;
+            if (validationRule.HasConditions() || ruleComponent.HasConditions()) return Task.CompletedTask;
 
-            if (schema.Required == null) schema.Required = new SortedSet<string>();            
-            if (!schema.Required.Contains(propertyRule.GetPropertyKey()))
+            if (schema.Required == null) schema.Required = new SortedSet<string>();
+            if (!schema.Required.Contains(validationRule.GetPropertyKey()))
             {
-                schema.Required.Add(propertyRule.GetPropertyKey());
-                schema.Properties[propertyRule.GetPropertyKey()].Nullable = false;
+                schema.Required.Add(validationRule.GetPropertyKey());
+                schema.Properties[validationRule.GetPropertyKey()].Nullable = false;
             }
 
             return Task.CompletedTask;
