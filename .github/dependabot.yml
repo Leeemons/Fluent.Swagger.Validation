@@ -1,0 +1,41 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: FluentValidation
+    versions:
+    - 10.0.0
+    - 10.0.1
+    - 9.4.0
+    - 9.5.0
+    - 9.5.2
+    - 9.5.3
+    - 9.5.4
+  - dependency-name: FluentValidation.AspNetCore
+    versions:
+    - 10.0.0
+    - 10.0.1
+    - 9.4.0
+    - 9.5.0
+    - 9.5.2
+    - 9.5.3
+    - 9.5.4
+  - dependency-name: Swashbuckle.AspNetCore
+    versions:
+    - 6.0.2
+    - 6.0.4
+    - 6.0.5
+    - 6.1.0
+    - 6.1.1
+  - dependency-name: Swashbuckle.AspNetCore.SwaggerGen
+    versions:
+    - 6.0.2
+    - 6.0.4
+    - 6.0.5
+    - 6.1.0
+    - 6.1.1
